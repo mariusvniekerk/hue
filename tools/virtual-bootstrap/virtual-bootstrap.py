@@ -377,8 +377,11 @@ def file_search_dirs():
 
 def install_setuptools(py_executable, unzip=False):
     try:
+        return
         _install_req(py_executable, unzip)
     except OSError, e:
+        print "PYEXEC: ", py_executable
+        print
         print """
         -----------------------------------------------------------------------------------------------------------------
         If on Ubuntu 14.04 Trusty, you might be hitting https://bugs.launchpad.net/ubuntu/+source/python2.7/+bug/1115466.
@@ -393,6 +396,7 @@ def install_setuptools(py_executable, unzip=False):
         raise e
 
 def install_distribute(py_executable, unzip=False):
+    return
     _install_req(py_executable, unzip, distribute=True)
 
 _pip_re = re.compile(r'^pip-.*(zip|tar.gz|tar.bz2|tgz|tbz)$', re.I)
@@ -639,9 +643,14 @@ def create_environment(home_dir, site_packages=True, clear=False,
     """
     home_dir, lib_dir, inc_dir, bin_dir = path_locations(home_dir)
 
+    call_subprocess(['conda', 'create', '--yes', '-p', home_dir, 'distribute', 'setuptools', 'virtualenv', 'pip'])
+    return
+
     py_executable = os.path.abspath(install_python(
         home_dir, lib_dir, inc_dir, bin_dir,
         site_packages=site_packages, clear=clear))
+
+    print home_dir, lib_dir, inc_dir, bin_dir, site_packages
 
     install_distutils(lib_dir, home_dir)
 
